@@ -50,6 +50,9 @@ export default class Upload {
     this.meta = new FileMeta(opts.id, opts.file.size, opts.chunkSize, opts.storage)
     this.processor = new FileProcessor(opts.file, opts.chunkSize)
     this.lastResult = null;
+    this.resultArray = [];
+    this.paramsTracing = [];
+    this.totalChunks = Math.ceil(opts.file.size / opts.chunkSize);
   }
 
   async start () {
@@ -97,6 +100,14 @@ export default class Upload {
 
       const res = await safePut(opts.url, chunk, { headers })
       this.lastResult = res;
+      this.paramsTracing.push({url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: this.totalChunks});
+      this.resultArray.push(res);
+      let isLastChunk = this.totalChunks - index === 1;
+    /*  if(typeof res === 'undefined') {
+        if(!isLastChunk) {
+            throw res;
+        }
+      }*/
       checkResponseStatus(res, opts, [200, 201, 308])
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
@@ -199,10 +210,11 @@ async function safePut () {
   try {
     return await put.apply(null, arguments)
   } catch (e) {
-    if (e instanceof Error) {
+    return e;
+  /*  if (e instanceof Error) {
       throw e
     } else {
       return e
-    }
+    }*/
   }
 }
