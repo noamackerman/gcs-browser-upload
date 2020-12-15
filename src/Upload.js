@@ -103,7 +103,7 @@ export default class Upload {
       this.paramsTracing.push({url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: this.totalChunks});
       this.resultArray.push(res);
       let isLastChunk = this.totalChunks - index === 1;
-     if(e instanceof Error && e.message === 'Network Error') {
+     if(res instanceof Error && res.message === 'Network Error') {
         if(!isLastChunk) {
             throw res;
         }
