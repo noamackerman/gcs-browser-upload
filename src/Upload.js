@@ -108,7 +108,7 @@ export default class Upload {
             throw res;
         }
       }
-      //checkResponseStatus(res, opts, [200, 201, 308])
+      !isLastChunk && checkResponseStatus(res, opts, [200, 201, 308])
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
 

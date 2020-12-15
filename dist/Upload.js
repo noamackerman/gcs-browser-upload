@@ -211,7 +211,7 @@ var Upload = function () {
                             _this.resultArray.push(res);
                             isLastChunk = _this.totalChunks - index === 1;
 
-                            if (!(e instanceof Error && e.message === 'Network Error')) {
+                            if (!(res instanceof Error && res.message === 'Network Error')) {
                               _context2.next = 18;
                               break;
                             }
@@ -224,7 +224,7 @@ var Upload = function () {
                             throw res;
 
                           case 18:
-                            //checkResponseStatus(res, opts, [200, 201, 308])
+                            !isLastChunk && checkResponseStatus(res, opts, [200, 201, 308]);
                             (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
                             meta.addChecksum(index, checksum);
 
@@ -235,7 +235,7 @@ var Upload = function () {
                               chunkLength: chunk.byteLength
                             });
 
-                          case 21:
+                          case 22:
                           case 'end':
                             return _context2.stop();
                         }
