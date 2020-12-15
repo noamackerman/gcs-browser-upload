@@ -210,13 +210,21 @@ var Upload = function () {
                             _this.paramsTracing.push({ url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: _this.totalChunks });
                             _this.resultArray.push(res);
                             isLastChunk = _this.totalChunks - index === 1;
-                            /*  if(typeof res === 'undefined') {
-                                if(!isLastChunk) {
-                                    throw res;
-                                }
-                              }*/
-                            //checkResponseStatus(res, opts, [200, 201, 308])
 
+                            if (!(e instanceof Error && e.message === 'Network Error')) {
+                              _context2.next = 18;
+                              break;
+                            }
+
+                            if (isLastChunk) {
+                              _context2.next = 18;
+                              break;
+                            }
+
+                            throw res;
+
+                          case 18:
+                            //checkResponseStatus(res, opts, [200, 201, 308])
                             (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
                             meta.addChecksum(index, checksum);
 
@@ -227,7 +235,7 @@ var Upload = function () {
                               chunkLength: chunk.byteLength
                             });
 
-                          case 18:
+                          case 21:
                           case 'end':
                             return _context2.stop();
                         }

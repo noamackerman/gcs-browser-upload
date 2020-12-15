@@ -103,11 +103,11 @@ export default class Upload {
       this.paramsTracing.push({url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: this.totalChunks});
       this.resultArray.push(res);
       let isLastChunk = this.totalChunks - index === 1;
-    /*  if(typeof res === 'undefined') {
+     if(e instanceof Error && e.message === 'Network Error') {
         if(!isLastChunk) {
             throw res;
         }
-      }*/
+      }
       //checkResponseStatus(res, opts, [200, 201, 308])
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
