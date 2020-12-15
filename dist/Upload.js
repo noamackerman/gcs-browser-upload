@@ -215,8 +215,8 @@ var Upload = function () {
                                     throw res;
                                 }
                               }*/
+                            //checkResponseStatus(res, opts, [200, 201, 308])
 
-                            checkResponseStatus(res, opts, [200, 201, 308]);
                             (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
                             meta.addChecksum(index, checksum);
 
@@ -227,7 +227,7 @@ var Upload = function () {
                               chunkLength: chunk.byteLength
                             });
 
-                          case 19:
+                          case 18:
                           case 'end':
                             return _context2.stop();
                         }
@@ -341,7 +341,7 @@ var Upload = function () {
                 (0, _debug2.default)('Upload complete, resetting meta');
                 meta.reset();
                 this.finished = true;
-                return _context5.abrupt('return', this.lastResult);
+                return _context5.abrupt('return', { resultArray: this.resultArray, lastResult: this.lastResult, paramsTracing: this.paramsTracing, processorRes: this.processorRes });
 
               case 20:
               case 'end':

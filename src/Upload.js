@@ -108,7 +108,7 @@ export default class Upload {
             throw res;
         }
       }*/
-      checkResponseStatus(res, opts, [200, 201, 308])
+      //checkResponseStatus(res, opts, [200, 201, 308])
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
 
@@ -158,7 +158,7 @@ export default class Upload {
     debug('Upload complete, resetting meta')
     meta.reset()
     this.finished = true
-    return this.lastResult
+    return {resultArray: this.resultArray, lastResult: this.lastResult, paramsTracing: this.paramsTracing, processorRes: this.processorRes};
   }
 
   pause () {
