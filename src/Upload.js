@@ -122,22 +122,22 @@ export default class Upload {
         chunkLength: chunk.byteLength
       })
 
-      const reportUploadStatus = async () => {
+      const reportUploadStatus =  () => {
         const headers = {
           'Content-Range': `bytes */${opts.file.size}`
         }
-        debug('Retrieving upload status from GCS')
-        const res = await safePut(opts.url, null, { headers })
+        /*debug('Retrieving upload status from GCS')
+        const res =  safePut(opts.url, null, { headers })
   
         checkResponseStatus(res, opts, [308])
         const header = res.headers['range']
         debug(`Received upload status from GCS: ${header}`)
         const range = header.match(/(\d+?)-(\d+?)$/)
-        const bytesReceived = parseInt(range[2]) + 1
+        const bytesReceived = parseInt(range[2]) + 1*/
   
         opts.onChunkUpload({
           totalBytes: total,
-          uploadedBytes: bytesReceived,
+          uploadedBytes: end + 1,
           chunkIndex: index,
           chunkLength: chunk.byteLength
         })
