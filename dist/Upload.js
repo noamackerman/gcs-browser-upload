@@ -183,7 +183,7 @@ var Upload = function () {
                   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(checksum, index, chunk) {
                     var reportUploadStatus = function () {
                       var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-                        var headers, res, header, range, bytesReceived;
+                        var headers, res, bytesReceived, header, range;
                         return regeneratorRuntime.wrap(function _callee2$(_context2) {
                           while (1) {
                             switch (_context2.prev = _context2.next) {
@@ -197,12 +197,16 @@ var Upload = function () {
 
 
                                 checkResponseStatus(res, opts, [308]);
-                                header = res.headers['range'];
+                                bytesReceived = 0;
 
-                                (0, _debug2.default)('Received upload status from GCS: ' + header);
-                                range = header.match(/(\d+?)-(\d+?)$/);
-                                bytesReceived = parseInt(range[2]) + 1;
+                                if (res.headers['range']) {
+                                  header = res.headers['range'];
 
+                                  (0, _debug2.default)('Received upload status from GCS: ' + header);
+                                  range = header.match(/(\d+?)-(\d+?)$/);
+
+                                  bytesReceived = parseInt(range[2]) + 1;
+                                }
 
                                 opts.onChunkUpload({
                                   totalBytes: total,
@@ -211,7 +215,7 @@ var Upload = function () {
                                   chunkLength: chunk.byteLength
                                 });
 
-                              case 9:
+                              case 7:
                               case 'end':
                                 return _context2.stop();
                             }

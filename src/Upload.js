@@ -130,10 +130,14 @@ export default class Upload {
         const res =  safePut(opts.url, null, { headers })
   
         checkResponseStatus(res, opts, [308])
-        const header = res.headers['range']
-        debug(`Received upload status from GCS: ${header}`)
-        const range = header.match(/(\d+?)-(\d+?)$/)
-        const bytesReceived = parseInt(range[2]) + 1
+        let bytesReceived = 0;
+        if(res.headers['range']) {
+          const header = res.headers['range']
+          debug(`Received upload status from GCS: ${header}`)
+          const range = header.match(/(\d+?)-(\d+?)$/)
+          bytesReceived = parseInt(range[2]) + 1
+        }
+
   
         opts.onChunkUpload({
           totalBytes: total,
