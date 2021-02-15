@@ -127,7 +127,7 @@ export default class Upload {
           'Content-Range': `bytes */${opts.file.size}`
         }
         debug('Retrieving upload status from GCS')
-        const res =  safePut(opts.url, null, { headers })
+        const res =  await safePut(opts.url, null, { headers })
   
         checkResponseStatus(res, opts, [308])
         let bytesReceived = 0;

@@ -193,7 +193,11 @@ var Upload = function () {
                                 };
 
                                 (0, _debug2.default)('Retrieving upload status from GCS');
-                                res = safePut(opts.url, null, { headers: headers });
+                                _context2.next = 4;
+                                return safePut(opts.url, null, { headers: headers });
+
+                              case 4:
+                                res = _context2.sent;
 
 
                                 checkResponseStatus(res, opts, [308]);
@@ -218,7 +222,7 @@ var Upload = function () {
                                   url: opts.url
                                 });
 
-                              case 7:
+                              case 9:
                               case 'end':
                                 return _context2.stop();
                             }
