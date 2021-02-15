@@ -471,6 +471,6 @@ function checkResponseStatus(res, opts) {
       throw new _errors.UploadFailedError(status);
 
     default:
-      throw new _errors.UnknownResponseError(res);
+    //throw new UnknownResponseError(res)
   }
 }
