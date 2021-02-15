@@ -123,31 +123,32 @@ export default class Upload {
       })
 
       async function reportUploadStatus() {
-        const headers = {
-          'Content-Range': `bytes */${opts.file.size}`
+        if(index > 0) {
+          const headers = {
+            'Content-Range': `bytes */${opts.file.size}`
+          }
+          debug('Retrieving upload status from GCS')
+          const res =  await safePut(opts.url, null, { headers })
+    
+          checkResponseStatus(res, opts, [308])
+          let bytesReceived = 0;
+          if(res && res.headers && res.headers['range']) {
+            const header = res.headers['range']
+            debug(`Received upload status from GCS: ${header}`)
+            const range = header.match(/(\d+?)-(\d+?)$/)
+            bytesReceived = parseInt(range[2]) + 1
+          }
+    
+          opts.onChunkUpload({
+            totalBytes: total,
+            uploadedBytes: bytesReceived,
+            chunkIndex: index,
+            chunkLength: chunk.byteLength,
+            headers: JSON.stringify(headers),
+            status: JSON.stringify(res),
+            url: opts.url,
+          })
         }
-        debug('Retrieving upload status from GCS')
-        const res =  await safePut(opts.url, null, { headers })
-  
-        checkResponseStatus(res, opts, [308])
-        let bytesReceived = 0;
-        if(res && res.headers && res.headers['range']) {
-          const header = res.headers['range']
-          debug(`Received upload status from GCS: ${header}`)
-          const range = header.match(/(\d+?)-(\d+?)$/)
-          bytesReceived = parseInt(range[2]) + 1
-        }
-
-  
-        opts.onChunkUpload({
-          totalBytes: total,
-          uploadedBytes: bytesReceived,
-          chunkIndex: index,
-          chunkLength: chunk.byteLength,
-          headers: JSON.stringify(headers),
-          status: JSON.stringify(res),
-          url: opts.url,
-        })
       }
     }
 

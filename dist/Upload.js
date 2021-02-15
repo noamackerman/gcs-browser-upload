@@ -183,28 +183,34 @@ var Upload = function () {
                   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(checksum, index, chunk) {
                     var reportUploadStatus = function () {
                       var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-                        var headers, res, bytesReceived, header, range;
+                        var _headers, _res, bytesReceived, header, range;
+
                         return regeneratorRuntime.wrap(function _callee2$(_context2) {
                           while (1) {
                             switch (_context2.prev = _context2.next) {
                               case 0:
-                                headers = {
+                                if (!(index > 0)) {
+                                  _context2.next = 10;
+                                  break;
+                                }
+
+                                _headers = {
                                   'Content-Range': 'bytes */' + opts.file.size
                                 };
 
                                 (0, _debug2.default)('Retrieving upload status from GCS');
-                                _context2.next = 4;
-                                return safePut(opts.url, null, { headers: headers });
+                                _context2.next = 5;
+                                return safePut(opts.url, null, { headers: _headers });
 
-                              case 4:
-                                res = _context2.sent;
+                              case 5:
+                                _res = _context2.sent;
 
 
-                                checkResponseStatus(res, opts, [308]);
+                                checkResponseStatus(_res, opts, [308]);
                                 bytesReceived = 0;
 
-                                if (res && res.headers && res.headers['range']) {
-                                  header = res.headers['range'];
+                                if (_res && _res.headers && _res.headers['range']) {
+                                  header = _res.headers['range'];
 
                                   (0, _debug2.default)('Received upload status from GCS: ' + header);
                                   range = header.match(/(\d+?)-(\d+?)$/);
@@ -217,12 +223,12 @@ var Upload = function () {
                                   uploadedBytes: bytesReceived,
                                   chunkIndex: index,
                                   chunkLength: chunk.byteLength,
-                                  headers: JSON.stringify(headers),
-                                  status: JSON.stringify(res),
+                                  headers: JSON.stringify(_headers),
+                                  status: JSON.stringify(_res),
                                   url: opts.url
                                 });
 
-                              case 9:
+                              case 10:
                               case 'end':
                                 return _context2.stop();
                             }
