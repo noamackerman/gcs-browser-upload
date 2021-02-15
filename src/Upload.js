@@ -122,7 +122,7 @@ export default class Upload {
         chunkLength: chunk.byteLength
       })
 
-      const reportUploadStatus =  () => {
+      function reportUploadStatus() {
         const headers = {
           'Content-Range': `bytes */${opts.file.size}`
         }

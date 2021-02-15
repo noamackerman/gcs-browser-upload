@@ -186,60 +186,6 @@ var Upload = function () {
                       while (1) {
                         switch (_context2.prev = _context2.next) {
                           case 0:
-                            total = opts.file.size;
-                            start = index * opts.chunkSize;
-                            end = index * opts.chunkSize + chunk.byteLength - 1;
-                            intervalId = setInterval(function () {
-                              return reportUploadStatus();
-                            }, 2000);
-                            headers = {
-                              'Content-Type': opts.contentType,
-                              'Content-Range': 'bytes ' + start + '-' + end + '/' + total
-                            };
-
-
-                            (0, _debug2.default)('Uploading chunk ' + index + ':');
-                            (0, _debug2.default)(' - Chunk length: ' + chunk.byteLength);
-                            (0, _debug2.default)(' - Start: ' + start);
-                            (0, _debug2.default)(' - End: ' + end);
-
-                            _context2.next = 11;
-                            return safePut(opts.url, chunk, { headers: headers });
-
-                          case 11:
-                            res = _context2.sent;
-
-                            _this.lastResult = res;
-                            _this.paramsTracing.push({ url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: _this.totalChunks });
-                            _this.resultArray.push(res);
-                            isLastChunk = _this.totalChunks - index === 1;
-
-                            if (!(res instanceof Error && res.message === 'Network Error')) {
-                              _context2.next = 19;
-                              break;
-                            }
-
-                            if (isLastChunk) {
-                              _context2.next = 19;
-                              break;
-                            }
-
-                            throw res;
-
-                          case 19:
-                            !isLastChunk && checkResponseStatus(res, opts, [200, 201, 308]);
-                            (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
-                            meta.addChecksum(index, checksum);
-
-                            //clearInterval(intervalId);
-
-                            opts.onChunkUpload({
-                              totalBytes: total,
-                              uploadedBytes: end + 1,
-                              chunkIndex: index,
-                              chunkLength: chunk.byteLength
-                            });
-
                             reportUploadStatus = function reportUploadStatus() {
                               var headers = {
                                 'Content-Range': 'bytes */' + opts.file.size
@@ -258,6 +204,60 @@ var Upload = function () {
                                 chunkLength: chunk.byteLength
                               });
                             };
+
+                            total = opts.file.size;
+                            start = index * opts.chunkSize;
+                            end = index * opts.chunkSize + chunk.byteLength - 1;
+                            intervalId = setInterval(function () {
+                              return reportUploadStatus();
+                            }, 2000);
+                            headers = {
+                              'Content-Type': opts.contentType,
+                              'Content-Range': 'bytes ' + start + '-' + end + '/' + total
+                            };
+
+
+                            (0, _debug2.default)('Uploading chunk ' + index + ':');
+                            (0, _debug2.default)(' - Chunk length: ' + chunk.byteLength);
+                            (0, _debug2.default)(' - Start: ' + start);
+                            (0, _debug2.default)(' - End: ' + end);
+
+                            _context2.next = 12;
+                            return safePut(opts.url, chunk, { headers: headers });
+
+                          case 12:
+                            res = _context2.sent;
+
+                            _this.lastResult = res;
+                            _this.paramsTracing.push({ url: opts.url, chunk: chunk, headers: headers, fileSize: total, chunkSize: opts.chunkSize, chunkIndex: index, totalChunks: _this.totalChunks });
+                            _this.resultArray.push(res);
+                            isLastChunk = _this.totalChunks - index === 1;
+
+                            if (!(res instanceof Error && res.message === 'Network Error')) {
+                              _context2.next = 20;
+                              break;
+                            }
+
+                            if (isLastChunk) {
+                              _context2.next = 20;
+                              break;
+                            }
+
+                            throw res;
+
+                          case 20:
+                            !isLastChunk && checkResponseStatus(res, opts, [200, 201, 308]);
+                            (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
+                            meta.addChecksum(index, checksum);
+
+                            //clearInterval(intervalId);
+
+                            opts.onChunkUpload({
+                              totalBytes: total,
+                              uploadedBytes: end + 1,
+                              chunkIndex: index,
+                              chunkLength: chunk.byteLength
+                            });
 
                           case 24:
                           case 'end':
