@@ -181,7 +181,7 @@ var Upload = function () {
 
                 uploadChunk = function () {
                   var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(checksum, index, chunk) {
-                    var total, start, end, timeout, headers, res, isLastChunk, reportUploadStatus;
+                    var total, start, end, intervalId, headers, res, isLastChunk, reportUploadStatus;
                     return regeneratorRuntime.wrap(function _callee2$(_context2) {
                       while (1) {
                         switch (_context2.prev = _context2.next) {
@@ -189,7 +189,9 @@ var Upload = function () {
                             total = opts.file.size;
                             start = index * opts.chunkSize;
                             end = index * opts.chunkSize + chunk.byteLength - 1;
-                            timeout = setTimeout(reportUploadStatus, 2000);
+                            intervalId = setInterval(function () {
+                              return reportUploadStatus;
+                            }, 2000);
                             headers = {
                               'Content-Type': opts.contentType,
                               'Content-Range': 'bytes ' + start + '-' + end + '/' + total
@@ -255,7 +257,6 @@ var Upload = function () {
                                 chunkIndex: index,
                                 chunkLength: chunk.byteLength
                               });
-                              setTimeout(reportUploadStatus, 2000);
                             };
 
                           case 24:

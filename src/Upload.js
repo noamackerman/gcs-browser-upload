@@ -87,7 +87,7 @@ export default class Upload {
       const total = opts.file.size
       const start = index * opts.chunkSize
       const end = index * opts.chunkSize + chunk.byteLength - 1
-      let timeout = setTimeout(reportUploadStatus, 2000);
+      let intervalId = setInterval(() => reportUploadStatus, 2000);
 
       const headers = {
         'Content-Type': opts.contentType,
@@ -141,7 +141,6 @@ export default class Upload {
           chunkIndex: index,
           chunkLength: chunk.byteLength
         })
-        setTimeout(reportUploadStatus, 2000);
       }
     }
 
