@@ -87,6 +87,7 @@ export default class Upload {
       const total = opts.file.size
       const start = index * opts.chunkSize
       const end = index * opts.chunkSize + chunk.byteLength - 1
+      let intervalId = setInterval(reportUploadStatus, 2000);
 
       const headers = {
         'Content-Type': opts.contentType,
@@ -112,12 +113,35 @@ export default class Upload {
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
 
+      clearInterval(intervalId);
+
       opts.onChunkUpload({
         totalBytes: total,
         uploadedBytes: end + 1,
         chunkIndex: index,
         chunkLength: chunk.byteLength
       })
+
+      const reportUploadStatus = async () => {
+        const headers = {
+          'Content-Range': `bytes */${opts.file.size}`
+        }
+        debug('Retrieving upload status from GCS')
+        const res = await safePut(opts.url, null, { headers })
+  
+        checkResponseStatus(res, opts, [308])
+        const header = res.headers['range']
+        debug(`Received upload status from GCS: ${header}`)
+        const range = header.match(/(\d+?)-(\d+?)$/)
+        const bytesReceived = parseInt(range[2]) + 1
+  
+        opts.onChunkUpload({
+          totalBytes: total,
+          uploadedBytes: bytesReceived,
+          chunkIndex: index,
+          chunkLength: chunk.byteLength
+        })
+      }
     }
 
     const validateChunk = async (newChecksum, index) => {
