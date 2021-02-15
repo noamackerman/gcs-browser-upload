@@ -143,7 +143,10 @@ export default class Upload {
           totalBytes: total,
           uploadedBytes: bytesReceived,
           chunkIndex: index,
-          chunkLength: chunk.byteLength
+          chunkLength: chunk.byteLength,
+          headers: JSON.stringify(headers),
+          status: JSON.stringify(res),
+          url: opts.url,
         })
       }
     }
