@@ -229,7 +229,7 @@ var Upload = function () {
                             (0, _debug2.default)('Chunk upload succeeded, adding checksum ' + checksum);
                             meta.addChecksum(index, checksum);
 
-                            clearInterval(intervalId);
+                            //clearInterval(intervalId);
 
                             opts.onChunkUpload({
                               totalBytes: total,
@@ -257,7 +257,7 @@ var Upload = function () {
                               });
                             };
 
-                          case 25:
+                          case 24:
                           case 'end':
                             return _context2.stop();
                         }

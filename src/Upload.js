@@ -113,7 +113,7 @@ export default class Upload {
       debug(`Chunk upload succeeded, adding checksum ${checksum}`)
       meta.addChecksum(index, checksum)
 
-      clearInterval(intervalId);
+      //clearInterval(intervalId);
 
       opts.onChunkUpload({
         totalBytes: total,
