@@ -199,7 +199,7 @@ var Upload = function () {
                                 checkResponseStatus(res, opts, [308]);
                                 bytesReceived = 0;
 
-                                if (res.headers['range']) {
+                                if (res && res.headers && res.headers['range']) {
                                   header = res.headers['range'];
 
                                   (0, _debug2.default)('Received upload status from GCS: ' + header);
