@@ -190,7 +190,7 @@ var Upload = function () {
                             start = index * opts.chunkSize;
                             end = index * opts.chunkSize + chunk.byteLength - 1;
                             intervalId = setInterval(function () {
-                              return reportUploadStatus;
+                              return reportUploadStatus();
                             }, 2000);
                             headers = {
                               'Content-Type': opts.contentType,
